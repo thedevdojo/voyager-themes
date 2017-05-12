@@ -1,6 +1,6 @@
 <?php
 
-class ThemeServiceProvider extends \Illuminate\Support\ServiceProvider
+class VoyagerThemesServiceProvider extends \Illuminate\Support\ServiceProvider
 {
   public function boot(\Illuminate\Routing\Router $router)
   {
