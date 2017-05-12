@@ -1,0 +1,20 @@
+{
+  "provider": "ThemeServiceProvider",
+  "scripts": {
+    "install": [
+      "php {HOOKS}/github-test-hook/scripts/install.php"
+    ],
+    "uninstall": [
+      "php {HOOKS}/github-test-hook/scripts/uninstall.php"
+    ],
+    "update": [
+      "php {HOOKS}/github-test-hook/scripts/update.php"
+    ],
+    "enable": [
+      "php {HOOKS}/github-test-hook/scripts/enable.php"
+    ],
+    "disable": [
+      "php {HOOKS}/github-test-hook/scripts/disable.php"
+    ]
+  }
+}
