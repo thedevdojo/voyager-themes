@@ -37,14 +37,16 @@ class VoyagerThemesServiceProvider extends \Illuminate\Support\ServiceProvider
 	public function addThemeroutes($router)
     {
         $namespacePrefix = '\\Hooks\\VoyagerThemes\\Http\\Controllers\\';
-        $router->get('themes', ['uses' => $namespacePrefix.'ThemesController@index', 'as' => 'themes']);
-    	$router->get('themes/activate/{theme}', ['uses' => $namespacePrefix.'ThemesController@activate', 'as' => 'theme_activate']);
+        $router->get('themes', ['uses' => $namespacePrefix.'ThemesController@index', 'as' => 'theme.index']);
+    	$router->get('themes/activate/{theme}', ['uses' => $namespacePrefix.'ThemesController@activate', 'as' => 'theme.activate']);
+    	$router->get('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options', 'as' => 'theme.options']);
+    	$router->post('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options_save', 'as' => 'theme.options.post']);
     }
 
 	public function addThemeMenuItem(Menu $menu)
 	{
 	    if ($menu->name == 'admin') {
-	        $url = route('voyager.themes', [], false);
+	        $url = route('voyager.theme.index', [], false);
 	        $menuItem = $menu->items->where('url', $url)->first();
 	        if (is_null($menuItem)) {
 	            $menu->items->add(MenuItem::create([

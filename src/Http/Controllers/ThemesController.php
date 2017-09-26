@@ -69,20 +69,44 @@ class ThemesController extends \App\Http\Controllers\Controller
             $theme->active = 1;
             $theme->save();
             return redirect()
-                ->route("voyager.themes")
+                ->route("voyager.theme.index")
                 ->with([
                         'message'    => "Successfully activated " . $theme->name . " theme.",
                         'alert-type' => 'success',
                     ]);
         } else {
             return redirect()
-                ->route("voyager.themes")
+                ->route("voyager.theme.index")
                 ->with([
                         'message'    => "Could not find theme " . $theme_folder . ".",
                         'alert-type' => 'error',
                     ]);
         }
 
+    }
+
+    public function options($theme_folder){
+
+        $theme = Theme::where('folder', '=', $theme_folder)->first();
+        
+        if(isset($theme->id)){
+            
+            $options = [];
+
+            return view('themes::options', compact('options', 'theme'));
+            
+        } else {
+            return redirect()
+                ->route("voyager.theme.index")
+                ->with([
+                        'message'    => "Could not find theme " . $theme_folder . ".",
+                        'alert-type' => 'error',
+                    ]);
+        }
+    }
+
+    public function options_save(Request $request){
+        dd((array)$request);
     }
 
     private function deactivateThemes(){

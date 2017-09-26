@@ -1,7 +1,6 @@
 @extends('voyager::master')
 
 @section('css')
-
 	<style type="text/css">
 		
 		#themes{
@@ -18,7 +17,6 @@
 		}
 		#themes .page-title small{
 			margin-left:10px;
-			color:#FFFFFF;
 			color:rgba(255, 255, 255, 0.85);
 		}
 
@@ -81,11 +79,12 @@
 			margin-bottom:0px;
 		}
 
-		.theme_details a{
+		.theme_details a.btn{
 			color:#79797f;
+			border:1px solid #e1e1e1;
 		}
 
-		.theme_details a:hover{
+		.theme_details a.btn:hover{
 			background:#2ecc71;
 			border-color:#2ecc71;
 			color:#fff;
@@ -94,8 +93,24 @@
 		.theme_details span{
 			cursor:default;
 		}
-	</style>
+		.theme-options{
+			padding: 8px 10px;
+		    border: 1px solid #e1e1e1;
+		    border-radius: 3px;
+		    float: right;
+		    width: 36px;
+		    height: 36px;
+		    margin-top: 5px;
+		    margin-right: 10px;
+		    cursor: pointer;
+		    transition:all 0.3s ease;
+		}
+		.theme-options:hover{
+			background:#fcfcfc;
+			border: 1px solid #ddd;
+		}
 
+	</style>
 @endsection
 
 @section('content')
@@ -123,8 +138,9 @@
 		        					@if($theme->active)
 		        						<span class="btn btn-success pull-right"><i class="voyager-check"></i> Active</span>
 		        					@else
-		        						<a class="btn btn-outline pull-right" href="{{ route('voyager.theme_activate', $theme->folder) }}"><i class="voyager-check"></i> Activate Theme</a>
+		        						<a class="btn btn-outline pull-right" href="{{ route('voyager.theme.activate', $theme->folder) }}"><i class="voyager-check"></i> Activate Theme</a>
 		        					@endif
+		        					<a href="{{ route('voyager.theme.options', $theme->folder) }}" class="voyager-params theme-options"></a>
 		        				</div>
 		        			</div>
 	        			</div>
@@ -140,12 +156,4 @@
 </div>
 	
 
-@endsection
-
-@section('javascript')
-	<script>
-		$('document').ready(function(){
-			
-		});
-	</script>
 @endsection
