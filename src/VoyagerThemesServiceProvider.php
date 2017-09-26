@@ -1,5 +1,6 @@
 <?php
 
+namespace VoyagerThemes;
 
 use Illuminate\Events\Dispatcher;
 use TCG\Voyager\Models\Menu;
@@ -28,7 +29,7 @@ class VoyagerThemesServiceProvider extends \Illuminate\Support\ServiceProvider
 		$this->loadModels();
 		$this->loadViewsFrom(base_path('hooks/voyager-themes/resources/views'), 'themes');
 
-		$theme = Hooks\Models\VoyagerThemes\Theme::where('active', '=', 1)->first();
+		$theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
     	view()->share('theme', $theme);
 
 		$this->loadViewsFrom(public_path('themes'), 'theme');
@@ -36,7 +37,7 @@ class VoyagerThemesServiceProvider extends \Illuminate\Support\ServiceProvider
 
 	public function addThemeroutes($router)
     {
-        $namespacePrefix = '\\Hooks\\VoyagerThemes\\Http\\Controllers\\';
+        $namespacePrefix = '\\VoyagerThemes\\Http\\Controllers\\';
         $router->get('themes', ['uses' => $namespacePrefix.'ThemesController@index', 'as' => 'theme.index']);
     	$router->get('themes/activate/{theme}', ['uses' => $namespacePrefix.'ThemesController@activate', 'as' => 'theme.activate']);
     	$router->get('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options', 'as' => 'theme.options']);

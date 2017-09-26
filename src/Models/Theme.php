@@ -1,6 +1,6 @@
 <?php
 
-namespace Hooks\Models\VoyagerThemes;
+namespace VoyagerThemes\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

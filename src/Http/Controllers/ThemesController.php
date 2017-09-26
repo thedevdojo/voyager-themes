@@ -1,9 +1,9 @@
 <?php
 
-namespace Hooks\VoyagerThemes\Http\Controllers;
+namespace VoyagerThemes\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Hooks\Models\VoyagerThemes\Theme;
+use \VoyagerThemes\Models\Theme;
 use Voyager;
 
 class ThemesController extends \App\Http\Controllers\Controller
