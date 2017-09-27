@@ -31,3 +31,29 @@ if (!function_exists(theme)){
 	}
 
 }
+
+if(!function_exists(theme_folder)){
+	function theme_folder($folder_file = ''){
+
+		if(defined('VOYAGER_THEME_FOLDER') && VOYAGER_THEME_FOLDER){
+			return 'themes/' . VOYAGER_THEME_FOLDER . $folder_file;
+		}
+
+		$theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+		define('VOYAGER_THEME_FOLDER', $theme->folder);
+		return 'themes/' . $theme->folder . $folder_file;
+	}
+}
+
+if(!function_exists(theme_folder_url)){
+	function theme_folder_url($folder_file = ''){
+
+		if(defined('VOYAGER_THEME_FOLDER') && VOYAGER_THEME_FOLDER){
+			return url('themes/' . VOYAGER_THEME_FOLDER . $folder_file);
+		}
+
+		$theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+		define('VOYAGER_THEME_FOLDER', $theme->folder);
+		return url('themes/' . $theme->folder . $folder_file);
+	}
+}
