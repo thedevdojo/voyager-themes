@@ -110,6 +110,43 @@
 			border: 1px solid #ddd;
 		}
 
+		.theme-options-trash{
+			padding: 8px 10px;
+		    border: 1px solid #e1e1e1;
+		    border-radius: 3px;
+		    float: right;
+		    width: 36px;
+		    height: 36px;
+		    margin-top: 5px;
+		    margin-right: 10px;
+		    cursor: pointer;
+		    transition:all 0.3s ease;
+		}
+		.theme-options-trash:hover{
+			background:#FA2A00;
+			border: 1px solid #FA2A00;
+			color:#fff;
+		}
+
+		.row>[class*=col-]{
+			margin-bottom:0px;
+		}
+
+		h2{
+			padding-top:10px;
+		}
+		.theme_details h4{
+			position:relative;
+		}
+		.theme_details h4 span{
+			font-size: 10px;
+		    position: absolute;
+		    right: 0px;
+		    bottom: -12px;
+		    color: #999;
+		    font-weight: lighter;
+		}
+
 	</style>
 @endsection
 
@@ -124,23 +161,42 @@
         	<small>Choose a theme below</small>
         </h1>
 
+        @if(count($themes) < 1)
+	        <div class="alert alert-warning">
+	            <strong>Wuh oh!</strong>
+	            <p>It doesn't look like you have any themes available in your theme folder located at <code><?= public_path('themes'); ?></code></p>
+	        </div>
+	    @endif
+
         <div class="panel">
         	<div class="panel-body">
         		
         		<div class="row">
+
+        			@if(count($themes) < 1)
+        				<div class="col-md-12">
+        					<h2>No Themes Found</h2>
+        					<p>That's ok, you can download a <a href="https://github.com/thedevdojo/sample-theme" target="_blank">sample theme here</a>, or download the <a href="https://github.com/thedevdojo/pages" target="_blank">default pages here</a>. Make sure to download the theme and place it in your themes folder.</p> 
+        				</div>
+        			@endif
+
 	        		@foreach($themes as $theme)
 
 	        			<div class="col-md-4">
 	        				<div class="theme">
-		        				<img class="theme_thumb" src="/themes/{{ $theme->folder }}/{{ $theme->folder }}.jpg">
+		        				<img class="theme_thumb" src="{{ url('themes' ) }}/{{ $theme->folder }}/{{ $theme->folder }}.jpg">
 		        				<div class="theme_details">
-		        					<h4>{{ $theme->name }}</h4>
+		        					<h4>{{ $theme->name }}<span>@if(isset($theme->version)){{ 'version ' . $theme->version }}@endif</span></h4>
+
 		        					@if($theme->active)
 		        						<span class="btn btn-success pull-right"><i class="voyager-check"></i> Active</span>
 		        					@else
 		        						<a class="btn btn-outline pull-right" href="{{ route('voyager.theme.activate', $theme->folder) }}"><i class="voyager-check"></i> Activate Theme</a>
 		        					@endif
 		        					<a href="{{ route('voyager.theme.options', $theme->folder) }}" class="voyager-params theme-options"></a>
+		        					<div class="voyager-trash theme-options-trash" data-id="{{ $theme->id }}"></div>
+		        					
+		        					
 		        				</div>
 		        			</div>
 	        			</div>
@@ -153,7 +209,45 @@
 
     </div>
 
+    {{-- Single delete modal --}}
+    <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager.generic.close') }}"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-trash"></i> Are you sure you want to delete this theme?</h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="{{ route('voyager.theme.delete') }}" id="delete_form" method="POST">
+                        {{ method_field("DELETE") }}
+                        {{ csrf_field() }}
+                        <input type="hidden" name="id" value="0" id="delete_id">
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm"
+                                 value="Yes, Permanantly Delete Theme">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">{{ __('voyager.generic.cancel') }}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 </div>
 	
+
+@endsection
+
+@section('javascript')
+
+	<script>
+		$('document').ready(function(){
+			var deleteFormAction;
+	        $('.theme_details').on('click', '.theme-options-trash', function (e) {
+	            var form = $('#delete_form')[0];
+	            $('#delete_id').val($(this).data('id'));
+	            $('#delete_modal').modal('show');
+	        });
+		});
+	</script>
 
 @endsection

@@ -9,6 +9,33 @@
 			color:rgba(0, 0, 0, 0.55);
 		}
 
+		#theme_options label{
+			font-weight: normal;
+		    font-size: 16px;
+		    width: 100%;
+		    margin-bottom: 10px;
+		    position: relative;
+		    left: 1px;
+		}
+
+		#theme_options span.how_to {
+		    font-size: 12px;
+		    margin-left: 10px;
+		    background: #fff;
+		    padding: 5px 14px;
+		    border-radius: 15px;
+		    display: inline-block;
+		    margin-top: 10px;
+		    border: 1px solid #f1f1f1;
+		    position: relative;
+		    top: -1px;
+		}
+
+		#theme_options span.how_to code{
+			background: none;
+    		border: 0px;
+		}
+
 	</style>
 
 @endsection
@@ -27,9 +54,14 @@
         <div class="panel">
         	<div class="panel-body">
         		
-	        		
 	        		@if(file_exists(public_path('themes') . '/' . $theme->folder . '/options.blade.php'))
-	        			@include('theme::' . $theme->folder . '.options')
+	        			<?php define("ACTIVE_THEME_FOLDER", $theme->folder); ?>
+	        			<form action="{{ route('voyager.theme.options', $theme->folder) }}" method="POST" enctype="multipart/form-data">
+	        				
+	        				@include('themes_folder::' . $theme->folder . '.options')
+	        				{{ csrf_field() }}
+	        				<button class="btn btn-success">Save Theme Settings</button>
+	        			</form>
 	        		@else
 	        			<p>No options file for {{ $theme->name }} theme.</p>
 	        		@endif
