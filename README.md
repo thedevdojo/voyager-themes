@@ -92,6 +92,7 @@ Only the first 2 are arguments are required
     {!! theme_field('text', 'headline') !!}
 
 **EXPLANATION:**
+    
     $type
         This is the type of field you want to display, you can
         take a look at all the fields from the TYPES OF FIELDS
@@ -115,6 +116,7 @@ Only the first 2 are arguments are required
         Whether or not this field is required
 
 **TYPES OF FIELDS**
+    
     checkbox, color, date, file, image, multiple_images,
     number, password, radio_btn, rich_text_box, code_editor,
     markdown_editor, select_dropdown, select_multiple, text,
