@@ -51,7 +51,7 @@ Inside the `options.blade.php` file you can now add a new field as simple as:
 {!! theme_field('text', 'title') !!}
 ```
 
-This will now add a new **text field** and store it with a **key** of *title*. So, now if you wanted to reference this theme key anywhere in your theme files you can simple echo it out like so:
+This will now add a new **text field** and store it with a **key** of *title*. So, now if you wanted to reference this value anywhere in your theme files you can simple echo it out like so:
 
 ```
 {{ theme('title') }}
