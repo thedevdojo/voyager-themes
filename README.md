@@ -31,7 +31,7 @@ Voyager Themes will detect this as a new theme. You can also include a sample sc
 
 In fact, you can checkout the sample-theme repo here: [https://github.com/thedevdojo/sample-theme](https://github.com/thedevdojo/sample-theme)
 
-You can active this theme inside of Voyager and then when you want to tell your application which view to load you can use:
+You can activate this theme inside of Voyager and then when you want to tell your application which view to load you can use:
 
 ```
 return view('theme::welcome')
