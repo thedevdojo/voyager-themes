@@ -58,9 +58,9 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 
         // Make sure we have an active theme
         if (isset($theme)) {
-            $this->loadViewsFrom(public_path('themes/'.$theme->folder), 'theme');
+            $this->loadViewsFrom(resource_path('views/themes/'.$theme->folder), 'theme');
         }
-        $this->loadViewsFrom(public_path('themes'), 'themes_folder');
+        $this->loadViewsFrom(resource_path('views/themes'), 'themes_folder');
     }
 
     /**
