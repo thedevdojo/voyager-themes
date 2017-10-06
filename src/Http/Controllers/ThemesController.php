@@ -3,9 +3,9 @@
 namespace VoyagerThemes\Http\Controllers;
 
 use Voyager;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use \VoyagerThemes\Models\Theme;
+use Illuminate\Support\Facades\File;
 use \VoyagerThemes\Models\ThemeOptions;
 use TCG\Voyager\Http\Controllers\Controller;
 
