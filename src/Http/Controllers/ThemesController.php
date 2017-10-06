@@ -23,10 +23,10 @@ class ThemesController extends Controller
 
     private function getThemesFromFolder(){
     	$themes = array();
-        $theme_folder = public_path('themes');
+        $theme_folder = resource_path('views/themes');
 
         if(!file_exists($theme_folder)){
-            mkdir(public_path('themes'));
+            mkdir(resource_path('views/themes'));
         }
 
         $scandirectory = scandir($theme_folder);
@@ -108,8 +108,8 @@ class ThemesController extends Controller
         $theme_name = $theme->name;
 
         // if the folder exists delete it
-        if(file_exists(public_path($theme->folder))){
-            File::deleteDirectory(public_path($theme->folder), true);
+        if(file_exists(resource_path('views/themes/'.$theme->folder))){
+            File::deleteDirectory(resource_path('views/themes/'.$theme->folder), false);
         }
 
         $theme->delete();
