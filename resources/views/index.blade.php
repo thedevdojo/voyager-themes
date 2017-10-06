@@ -2,7 +2,7 @@
 
 @section('css')
 	<style type="text/css">
-		
+
 		#themes{
 			margin-top:20px;
 		}
@@ -152,7 +152,7 @@
 
 @section('content')
 
-<div id="themes">	
+<div id="themes">
 
 	<div class="container-fluid">
 
@@ -164,19 +164,19 @@
         @if(count($themes) < 1)
 	        <div class="alert alert-warning">
 	            <strong>Wuh oh!</strong>
-	            <p>It doesn't look like you have any themes available in your theme folder located at <code><?= public_path('themes'); ?></code></p>
+	            <p>It doesn't look like you have any themes available in your theme folder located at <code><?= resource_path('views/themes'); ?></code></p>
 	        </div>
 	    @endif
 
         <div class="panel">
         	<div class="panel-body">
-        		
+
         		<div class="row">
 
         			@if(count($themes) < 1)
         				<div class="col-md-12">
         					<h2>No Themes Found</h2>
-        					<p>That's ok, you can download a <a href="https://github.com/thedevdojo/sample-theme" target="_blank">sample theme here</a>, or download the <a href="https://github.com/thedevdojo/pages" target="_blank">default pages here</a>. Make sure to download the theme and place it in your themes folder.</p> 
+        					<p>That's ok, you can download a <a href="https://github.com/thedevdojo/sample-theme" target="_blank">sample theme here</a>, or download the <a href="https://github.com/thedevdojo/pages" target="_blank">default pages here</a>. Make sure to download the theme and place it in your themes folder.</p>
         				</div>
         			@endif
 
@@ -195,8 +195,8 @@
 		        					@endif
 		        					<a href="{{ route('voyager.theme.options', $theme->folder) }}" class="voyager-params theme-options"></a>
 		        					<div class="voyager-trash theme-options-trash" data-id="{{ $theme->id }}"></div>
-		        					
-		        					
+
+
 		        				</div>
 		        			</div>
 	        			</div>
@@ -233,7 +233,6 @@
     </div><!-- /.modal -->
 
 </div>
-	
 
 @endsection
 
