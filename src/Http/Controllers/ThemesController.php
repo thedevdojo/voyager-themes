@@ -3,7 +3,7 @@
 namespace VoyagerThemes\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illumniate\Http\File;
+use Illuminate\Support\Facades\File;
 use \VoyagerThemes\Models\Theme;
 use \VoyagerThemes\Models\ThemeOptions;
 use Voyager;
@@ -13,7 +13,7 @@ class ThemesController extends Controller
 {
     public function index(){
 
-        // Anytime the admin visits the theme page we will check if we 
+        // Anytime the admin visits the theme page we will check if we
         // need to add any more themes to the database
     	$this->addThemesToDB();
         $themes = Theme::all();
@@ -28,11 +28,11 @@ class ThemesController extends Controller
         if(!file_exists($theme_folder)){
             mkdir(resource_path('views/themes'));
         }
-        
+
         $scandirectory = scandir($theme_folder);
-        
+
         if(isset($scandirectory)){
-        	
+
             foreach($scandirectory as $folder){
             	//dd($theme_folder . '/' . $folder . '/' . $folder . '.json');
             	$json_file = $theme_folder . '/' . $folder . '/' . $folder . '.json';
@@ -44,7 +44,7 @@ class ThemesController extends Controller
             }
 
         }
-        
+
         return (object)$themes;
     }
 
@@ -72,11 +72,12 @@ class ThemesController extends Controller
     public function activate($theme_folder){
 
         $theme = Theme::where('folder', '=', $theme_folder)->first();
-        
+
         if(isset($theme->id)){
             $this->deactivateThemes();
             $theme->active = 1;
             $theme->save();
+            $this->publishAssets($theme->folder);
             return redirect()
                 ->route("voyager.theme.index")
                 ->with([
@@ -108,11 +109,15 @@ class ThemesController extends Controller
         $theme_name = $theme->name;
 
         // if the folder exists delete it
-        if(file_exists(resource_path($theme->folder))){
-            File::deleteDirectory(resource_path($theme->folder), true);
+        if(file_exists(resource_path('views/themes/'.$theme->folder))){
+            File::deleteDirectory(resource_path('views/themes/'.$theme->folder), false);
         }
 
         $theme->delete();
+
+        if(file_exists(public_path('themes/'.$theme->folder))){
+            File::deleteDirectory(public_path('themes/'.$theme->folder), false);
+        }
 
         return redirect()
                 ->back()
@@ -126,13 +131,13 @@ class ThemesController extends Controller
     public function options($theme_folder){
 
         $theme = Theme::where('folder', '=', $theme_folder)->first();
-        
+
         if(isset($theme->id)){
-            
+
             $options = [];
 
             return view('themes::options', compact('options', 'theme'));
-            
+
         } else {
             return redirect()
                 ->route("voyager.theme.index")
@@ -190,11 +195,15 @@ class ThemesController extends Controller
     {
         $length = strlen($needle);
 
-        return $length === 0 || 
+        return $length === 0 ||
         (substr($haystack, -$length) === $needle);
     }
 
     private function deactivateThemes(){
         Theme::query()->update(['active' => 0]);
+    }
+
+    private function publishAssets($theme) {
+        File::copyDirectory(resource_path('views/themes/'.$theme.'/assets'), public_path('themes/'.$theme));
     }
 }
