@@ -8,6 +8,7 @@ use \VoyagerThemes\Models\Theme;
 use \VoyagerThemes\Models\ThemeOptions;
 use Voyager;
 use TCG\Voyager\Http\Controllers\Controller;
+use Illuminate\Filesystem\Filesystem;
 
 class ThemesController extends Controller
 {
@@ -15,7 +16,7 @@ class ThemesController extends Controller
 
         // Anytime the admin visits the theme page we will check if we
         // need to add any more themes to the database
-    	$this->addThemesToDB();
+        $this->addThemesToDB();
         $themes = Theme::all();
 
         return view('themes::index', compact('themes'));
@@ -58,12 +59,14 @@ class ThemesController extends Controller
     			// If the theme does not exist in the database, then update it.
     			if(!isset($theme_exists->id)){
                     $version = isset($theme->version) ? $theme->version : '';
-    				Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
+                    Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
+                    $this->publishAssets($theme->folder);
     			} else {
     				// If it does exist, let's make sure it's been updated
     				$theme_exists->name = $theme->name;
                     $theme_exists->version = isset($theme->version) ? $theme->version : '';
                     $theme_exists->save();
+                    $this->publishAssets($theme->folder);
     			}
     		}
     	}
@@ -77,7 +80,6 @@ class ThemesController extends Controller
             $this->deactivateThemes();
             $theme->active = 1;
             $theme->save();
-            $this->publishAssets($theme->folder);
             return redirect()
                 ->route("voyager.theme.index")
                 ->with([
@@ -204,6 +206,11 @@ class ThemesController extends Controller
     }
 
     private function publishAssets($theme) {
+        $theme_path = public_path('themes/'.$theme);
+        if(!file_exists($theme_path)){
+            mkdir($theme_path);
+        }
         File::copyDirectory(resource_path('views/themes/'.$theme.'/assets'), public_path('themes/'.$theme));
+        File::copy(resource_path('views/themes/'.$theme.'/'.$theme.'.jpg'), public_path('themes/'.$theme.'/'.$theme.'.jpg'));
     }
 }
