@@ -16,9 +16,9 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 {
 
 	private $models = [
-			'Theme',
-			'ThemeOptions'
-		];
+		'Theme',
+		'ThemeOptions'
+	];
 
 
 	/**
@@ -32,7 +32,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 			$this->addThemesTable();
 
 			app(Dispatcher::class)->listen('voyager.menu.display', function ($menu) {
-	            $this->addThemeMenuItem($menu);
+	           	$this->addThemeMenuItem($menu);
 	        });
 
 			app(Dispatcher::class)->listen('voyager.admin.routing', function ($router) {
@@ -62,13 +62,13 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 	 */
 	public function addThemeRoutes($router)
     {
-        $namespacePrefix = '\\VoyagerThemes\\Http\\Controllers\\';
-        $router->get('themes', ['uses' => $namespacePrefix.'ThemesController@index', 'as' => 'theme.index']);
-    	$router->get('themes/activate/{theme}', ['uses' => $namespacePrefix.'ThemesController@activate', 'as' => 'theme.activate']);
-    	$router->get('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options', 'as' => 'theme.options']);
-    	$router->post('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options_save', 'as' => 'theme.options.post']);
-    	$router->get('themes/options', function(){ return redirect( route('voyager.theme.index') ); });
-    	$router->delete('themes/delete', ['uses' => $namespacePrefix.'ThemesController@delete', 'as' => 'theme.delete']);
+		$namespacePrefix = '\\VoyagerThemes\\Http\\Controllers\\';
+		$router->get('themes', ['uses' => $namespacePrefix.'ThemesController@index', 'as' => 'theme.index']);
+		$router->get('themes/activate/{theme}', ['uses' => $namespacePrefix.'ThemesController@activate', 'as' => 'theme.activate']);
+		$router->get('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options', 'as' => 'theme.options']);
+		$router->post('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options_save', 'as' => 'theme.options.post']);
+		$router->get('themes/options', function(){ return redirect( route('voyager.theme.index') ); });
+		$router->delete('themes/delete', ['uses' => $namespacePrefix.'ThemesController@delete', 'as' => 'theme.delete']);
     }
 
     /**
@@ -77,10 +77,10 @@ class VoyagerThemesServiceProvider extends ServiceProvider
      */
 	public function addThemeMenuItem(Menu $menu)
 	{
-	    if ($menu->name == 'admin') {
-	        $url = route('voyager.theme.index', [], false);
-	        $menuItem = $menu->items->where('url', $url)->first();
-	        if (is_null($menuItem)) {
+		if ($menu->name == 'admin') {
+	        	$url = route('voyager.theme.index', [], false);
+	        	$menuItem = $menu->items->where('url', $url)->first();
+	        	if (is_null($menuItem)) {
 	            $menu->items->add(MenuItem::create([
 	                'menu_id'    => $menu->id,
 	                'url'        => $url,
@@ -131,7 +131,6 @@ class VoyagerThemesServiceProvider extends ServiceProvider
      * Add the necessary Themes tables if they do not exist
      */
     private function addThemesTable(){
-
     	if(!Schema::hasTable('voyager_themes')){
 	    	Schema::create('voyager_themes', function (Blueprint $table) {
 	            $table->increments('id');
@@ -150,7 +149,6 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 	            $table->text('value')->nullable();
 	            $table->timestamps();
 	        });
-
 	    }
     }
 }
