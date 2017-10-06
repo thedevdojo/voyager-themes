@@ -2,13 +2,12 @@
 
 namespace VoyagerThemes\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use \VoyagerThemes\Models\Theme;
-use \VoyagerThemes\Models\ThemeOptions;
 use Voyager;
+use Illuminate\Http\Request;
+use \VoyagerThemes\Models\Theme;
+use Illuminate\Support\Facades\File;
+use \VoyagerThemes\Models\ThemeOptions;
 use TCG\Voyager\Http\Controllers\Controller;
-use Illuminate\Filesystem\Filesystem;
 
 class ThemesController extends Controller
 {
