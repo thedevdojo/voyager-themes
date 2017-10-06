@@ -15,7 +15,7 @@ class ThemesController extends Controller
 
         // Anytime the admin visits the theme page we will check if we
         // need to add any more themes to the database
-    	$this->addThemesToDB();
+    	$this->installThemes();
         $themes = Theme::all();
 
         return view('themes::index', compact('themes'));
@@ -48,7 +48,7 @@ class ThemesController extends Controller
         return (object)$themes;
     }
 
-    private function addThemesToDB(){
+    private function installThemes() {
 
         $themes = $this->getThemesFromFolder();
 
