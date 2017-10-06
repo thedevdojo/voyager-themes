@@ -42,7 +42,7 @@
 
 @section('content')
 
-<div id="theme_options">	
+<div id="theme_options">
 
 	<div class="container-fluid">
 
@@ -53,11 +53,11 @@
 
         <div class="panel">
         	<div class="panel-body">
-        		
-	        		@if(file_exists(public_path('themes') . '/' . $theme->folder . '/options.blade.php'))
+
+	        		@if(file_exists(resource_path('view/themes') . '/' . $theme->folder . '/options.blade.php'))
 	        			<?php define("ACTIVE_THEME_FOLDER", $theme->folder); ?>
 	        			<form action="{{ route('voyager.theme.options', $theme->folder) }}" method="POST" enctype="multipart/form-data">
-	        				
+
 	        				@include('themes_folder::' . $theme->folder . '.options')
 	        				{{ csrf_field() }}
 	        				<button class="btn btn-success">Save Theme Settings</button>
@@ -72,14 +72,14 @@
     </div>
 
 </div>
-	
+
 
 @endsection
 
 @section('javascript')
 	<script>
 		$('document').ready(function(){
-			
+
 		});
 	</script>
 @endsection
