@@ -2,16 +2,17 @@
 
 namespace VoyagerThemes;
 
-use Illuminate\Events\Dispatcher;
-use TCG\Voyager\Models\Menu;
-use TCG\Voyager\Models\MenuItem;
-use TCG\Voyager\Models\Permission;
-use TCG\Voyager\Models\Role;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
+use TCG\Voyager\Models\Menu;
+use TCG\Voyager\Models\Role;
+use TCG\Voyager\Models\MenuItem;
+use Illuminate\Events\Dispatcher;
+use TCG\Voyager\Models\Permission;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Schema\Blueprint;
 
-class VoyagerThemesServiceProvider extends \Illuminate\Support\ServiceProvider
+class VoyagerThemesServiceProvider extends ServiceProvider
 {
 
 	private $models = [
