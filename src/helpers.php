@@ -4,7 +4,7 @@
 if (!function_exists(theme_field)){
 
 	function theme_field($type, $key, $title, $content = '', $details = '', $placeholder = '', $required = 0){
-		
+
 		$theme = \VoyagerThemes\Models\Theme::where('folder', '=', ACTIVE_THEME_FOLDER)->first();
 
 		$option_exists = $theme->options->where('key', '=', $key)->first();
@@ -25,9 +25,16 @@ if (!function_exists(theme_field)){
 
 if (!function_exists(theme)){
 
-	function theme($key){
+	function theme($key, $default = ''){
 		$theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
-		return $theme->options->where('key', '=', $key)->first()->value;
+
+		$value = $theme->options->where('key', '=', $key)->first();
+
+		if(isset($value)) {
+			return $value->value;
+		}
+
+		return $default;
 	}
 
 }

@@ -60,7 +60,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
         if (isset($theme)) {
             $this->loadViewsFrom(resource_path('views/themes/'.$theme->folder), 'theme');
         }
-        $this->loadViewsFrom(resource_path('views/themes'), 'themes_folder');
+        $this->loadViewsFrom(resource_path('views/themes/'), 'themes_folder');
     }
 
     /**
