@@ -2,20 +2,20 @@
 
 namespace VoyagerThemes\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illumniate\Http\File;
-use \VoyagerThemes\Models\Theme;
-use \VoyagerThemes\Models\ThemeOptions;
 use Voyager;
+use Illuminate\Http\Request;
+use \VoyagerThemes\Models\Theme;
+use Illuminate\Support\Facades\File;
+use \VoyagerThemes\Models\ThemeOptions;
 use TCG\Voyager\Http\Controllers\Controller;
 
 class ThemesController extends Controller
 {
     public function index(){
 
-        // Anytime the admin visits the theme page we will check if we 
+        // Anytime the admin visits the theme page we will check if we
         // need to add any more themes to the database
-    	$this->addThemesToDB();
+        $this->addThemesToDB();
         $themes = Theme::all();
 
         return view('themes::index', compact('themes'));
@@ -23,16 +23,16 @@ class ThemesController extends Controller
 
     private function getThemesFromFolder(){
     	$themes = array();
-        $theme_folder = public_path('themes');
+        $theme_folder = resource_path('views/themes');
 
         if(!file_exists($theme_folder)){
-            mkdir(public_path('themes'));
+            mkdir(resource_path('views/themes'));
         }
-        
+
         $scandirectory = scandir($theme_folder);
-        
+
         if(isset($scandirectory)){
-        	
+
             foreach($scandirectory as $folder){
             	//dd($theme_folder . '/' . $folder . '/' . $folder . '.json');
             	$json_file = $theme_folder . '/' . $folder . '/' . $folder . '.json';
@@ -44,7 +44,7 @@ class ThemesController extends Controller
             }
 
         }
-        
+
         return (object)$themes;
     }
 
@@ -58,12 +58,14 @@ class ThemesController extends Controller
     			// If the theme does not exist in the database, then update it.
     			if(!isset($theme_exists->id)){
                     $version = isset($theme->version) ? $theme->version : '';
-    				Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
+                    Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
+                    $this->publishAssets($theme->folder);
     			} else {
     				// If it does exist, let's make sure it's been updated
     				$theme_exists->name = $theme->name;
                     $theme_exists->version = isset($theme->version) ? $theme->version : '';
                     $theme_exists->save();
+                    $this->publishAssets($theme->folder);
     			}
     		}
     	}
@@ -72,7 +74,7 @@ class ThemesController extends Controller
     public function activate($theme_folder){
 
         $theme = Theme::where('folder', '=', $theme_folder)->first();
-        
+
         if(isset($theme->id)){
             $this->deactivateThemes();
             $theme->active = 1;
@@ -108,11 +110,15 @@ class ThemesController extends Controller
         $theme_name = $theme->name;
 
         // if the folder exists delete it
-        if(file_exists(public_path($theme->folder))){
-            File::deleteDirectory(public_path($theme->folder), true);
+        if(file_exists(resource_path('views/themes/'.$theme->folder))){
+            File::deleteDirectory(resource_path('views/themes/'.$theme->folder), false);
         }
 
         $theme->delete();
+
+        if(file_exists(public_path('themes/'.$theme->folder))){
+            File::deleteDirectory(public_path('themes/'.$theme->folder), false);
+        }
 
         return redirect()
                 ->back()
@@ -126,13 +132,13 @@ class ThemesController extends Controller
     public function options($theme_folder){
 
         $theme = Theme::where('folder', '=', $theme_folder)->first();
-        
+
         if(isset($theme->id)){
-            
+
             $options = [];
 
             return view('themes::options', compact('options', 'theme'));
-            
+
         } else {
             return redirect()
                 ->route("voyager.theme.index")
@@ -190,11 +196,20 @@ class ThemesController extends Controller
     {
         $length = strlen($needle);
 
-        return $length === 0 || 
+        return $length === 0 ||
         (substr($haystack, -$length) === $needle);
     }
 
     private function deactivateThemes(){
         Theme::query()->update(['active' => 0]);
+    }
+
+    private function publishAssets($theme) {
+        $theme_path = public_path('themes/'.$theme);
+        if(!file_exists($theme_path)){
+            mkdir($theme_path);
+        }
+        File::copyDirectory(resource_path('views/themes/'.$theme.'/assets'), public_path('themes/'.$theme));
+        File::copy(resource_path('views/themes/'.$theme.'/'.$theme.'.jpg'), public_path('themes/'.$theme.'/'.$theme.'.jpg'));
     }
 }

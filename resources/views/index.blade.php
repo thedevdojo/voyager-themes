@@ -164,7 +164,7 @@
         @if(count($themes) < 1)
 	        <div class="alert alert-warning">
 	            <strong>Wuh oh!</strong>
-	            <p>It doesn't look like you have any themes available in your theme folder located at <code><?= public_path('themes'); ?></code></p>
+	            <p>It doesn't look like you have any themes available in your theme folder located at <code><?= resource_path('views/themes'); ?></code></p>
 	        </div>
 	    @endif
 
