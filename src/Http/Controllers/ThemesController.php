@@ -2,18 +2,18 @@
 
 namespace VoyagerThemes\Http\Controllers;
 
+use Voyager;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
-use Illumniate\Http\File;
 use \VoyagerThemes\Models\Theme;
 use \VoyagerThemes\Models\ThemeOptions;
-use Voyager;
 use TCG\Voyager\Http\Controllers\Controller;
 
 class ThemesController extends Controller
 {
     public function index(){
 
-        // Anytime the admin visits the theme page we will check if we 
+        // Anytime the admin visits the theme page we will check if we
         // need to add any more themes to the database
     	$this->addThemesToDB();
         $themes = Theme::all();
@@ -28,11 +28,11 @@ class ThemesController extends Controller
         if(!file_exists($theme_folder)){
             mkdir(public_path('themes'));
         }
-        
+
         $scandirectory = scandir($theme_folder);
-        
+
         if(isset($scandirectory)){
-        	
+
             foreach($scandirectory as $folder){
             	//dd($theme_folder . '/' . $folder . '/' . $folder . '.json');
             	$json_file = $theme_folder . '/' . $folder . '/' . $folder . '.json';
@@ -44,7 +44,7 @@ class ThemesController extends Controller
             }
 
         }
-        
+
         return (object)$themes;
     }
 
@@ -72,7 +72,7 @@ class ThemesController extends Controller
     public function activate($theme_folder){
 
         $theme = Theme::where('folder', '=', $theme_folder)->first();
-        
+
         if(isset($theme->id)){
             $this->deactivateThemes();
             $theme->active = 1;
@@ -126,13 +126,13 @@ class ThemesController extends Controller
     public function options($theme_folder){
 
         $theme = Theme::where('folder', '=', $theme_folder)->first();
-        
+
         if(isset($theme->id)){
-            
+
             $options = [];
 
             return view('themes::options', compact('options', 'theme'));
-            
+
         } else {
             return redirect()
                 ->route("voyager.theme.index")
@@ -190,7 +190,7 @@ class ThemesController extends Controller
     {
         $length = strlen($needle);
 
-        return $length === 0 || 
+        return $length === 0 ||
         (substr($haystack, -$length) === $needle);
     }
 
