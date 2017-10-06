@@ -58,12 +58,14 @@ class ThemesController extends Controller
     			// If the theme does not exist in the database, then update it.
     			if(!isset($theme_exists->id)){
                     $version = isset($theme->version) ? $theme->version : '';
-    				Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
+                    Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
+                    $this->publishAssets($theme->folder);
     			} else {
     				// If it does exist, let's make sure it's been updated
     				$theme_exists->name = $theme->name;
                     $theme_exists->version = isset($theme->version) ? $theme->version : '';
                     $theme_exists->save();
+                    $this->publishAssets($theme->folder);
     			}
     		}
     	}
@@ -110,6 +112,10 @@ class ThemesController extends Controller
         // if the folder exists delete it
         if(file_exists(resource_path('views/themes/'.$theme->folder))){
             File::deleteDirectory(resource_path('views/themes/'.$theme->folder), false);
+        }
+
+        if(file_exists(public_path('themes/'.$theme->folder))){
+            File::deleteDirectory(public_path('themes/'.$theme->folder), false);
         }
 
         $theme->delete();
@@ -196,5 +202,16 @@ class ThemesController extends Controller
 
     private function deactivateThemes(){
         Theme::query()->update(['active' => 0]);
+    }
+
+    private function publishAssets($theme) {
+        $theme_path = public_path('themes/'.$theme);
+
+        if(!file_exists($theme_path)){
+            mkdir($theme_path);
+        }
+
+        File::copyDirectory(resource_path('views/themes/'.$theme.'/assets'), public_path('themes/'.$theme));
+        File::copy(resource_path('views/themes/'.$theme.'/'.$theme.'.jpg'), public_path('themes/'.$theme.'/'.$theme.'.jpg'));
     }
 }
