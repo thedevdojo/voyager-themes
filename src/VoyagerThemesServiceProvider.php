@@ -52,7 +52,9 @@ class VoyagerThemesServiceProvider extends ServiceProvider
         $this->loadModels();
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'themes');
 
-        $theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+        $theme = rescue(function () {
+            return \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+        });
 
         view()->share('theme', $theme);
 
