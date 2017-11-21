@@ -16,7 +16,7 @@ php artisan hook:install voyager-themes
 
 ## Adding Themes
 
-The **voyager-themes** hook will look inside of the `public/themes` folder for any folder that has a `.json` file inside of it with the same name. 
+The **voyager-themes** hook will look inside of the `resources/themes` folder for any folder that has a `.json` file inside of it with the same name. *(You can change the theme folder location in the config)*
 
 As an example if you have a folder called **sample-theme** and inside that folder you have another file called **sample-theme.json** with the following contents:
 
