@@ -39,6 +39,31 @@ return view('theme::welcome')
 
 This will then look in the current active theme folder for a new view called `welcome.blade.php` :D
 
+## Theme Configs
+
+You may choose to publish a config to your project by running:
+
+```
+php artisan vendor:publish
+```
+
+You will want to publish the `voyager-themes-config`, and you will now see a new config located at `config/themes.php`, which will look like the following:
+
+```
+<?php
+
+return [
+
+    'themes_folder' => resource_path('views/themes'),
+    'publish_assets' => true
+
+];
+```
+
+Now, you can choose an alternate location for your themes folder. By default this will be put into the `resources/views` folder; however, you can change that to any location you would like.
+
+Additionally, you can set **publish_assets** to *true* or *false*, if it is set to *true* anytime the themes directory is scanned it will publish the `assets` folder in your theme to the public folder inside a new `themes` folder. Set this to *false* and this will no longer happen.
+
 ## Theme Options
 
 You can also easily add a number of options by including another file in the theme folder called `options.blade.php`
