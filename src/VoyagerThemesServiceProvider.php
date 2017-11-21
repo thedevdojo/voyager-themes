@@ -38,6 +38,9 @@ class VoyagerThemesServiceProvider extends ServiceProvider
             });
         }
 
+        // publish config
+        $this->publishes([dirname(__DIR__).'/config/themes.php' => config_path('themes.php')], 'voyager-themes-config');
+
         // load helpers
         @include __DIR__.'/helpers.php';
     }
@@ -58,11 +61,13 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 
         view()->share('theme', $theme);
 
+        $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
+
         // Make sure we have an active theme
         if (isset($theme)) {
-            $this->loadViewsFrom(resource_path('views/themes/'.$theme->folder), 'theme');
+            $this->loadViewsFrom($this->themes_folder.'/'.$theme->folder, 'theme');
         }
-        $this->loadViewsFrom(resource_path('views/themes/'), 'themes_folder');
+        $this->loadViewsFrom($this->themes_folder, 'themes_folder');
     }
 
     /**

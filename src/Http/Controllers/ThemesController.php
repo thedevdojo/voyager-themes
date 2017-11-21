@@ -11,6 +11,12 @@ use TCG\Voyager\Http\Controllers\Controller;
 
 class ThemesController extends Controller
 {
+    private $themes_folder = '';
+
+    public function __construct(){
+        $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
+    }
+
     public function index(){
 
         // Anytime the admin visits the theme page we will check if we
@@ -23,19 +29,18 @@ class ThemesController extends Controller
 
     private function getThemesFromFolder(){
     	$themes = array();
-        $theme_folder = resource_path('views/themes');
 
-        if(!file_exists($theme_folder)){
-            mkdir(resource_path('views/themes'));
+        if(!file_exists($this->themes_folder)){
+            mkdir($this->themes_folder);
         }
 
-        $scandirectory = scandir($theme_folder);
+        $scandirectory = scandir($this->themes_folder);
 
         if(isset($scandirectory)){
 
             foreach($scandirectory as $folder){
             	//dd($theme_folder . '/' . $folder . '/' . $folder . '.json');
-            	$json_file = $theme_folder . '/' . $folder . '/' . $folder . '.json';
+            	$json_file = $this->themes_folder . '/' . $folder . '/' . $folder . '.json';
                 if(file_exists($json_file)){
                     $themes[$folder] = json_decode(file_get_contents($json_file), true);
                     $themes[$folder]['folder'] = $folder;
@@ -59,13 +64,17 @@ class ThemesController extends Controller
     			if(!isset($theme_exists->id)){
                     $version = isset($theme->version) ? $theme->version : '';
                     Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
-                    $this->publishAssets($theme->folder);
+                    if(config('themes.publish_assets', true)){
+                        $this->publishAssets($theme->folder);
+                    }
     			} else {
     				// If it does exist, let's make sure it's been updated
     				$theme_exists->name = $theme->name;
                     $theme_exists->version = isset($theme->version) ? $theme->version : '';
                     $theme_exists->save();
-                    $this->publishAssets($theme->folder);
+                    if(config('themes.publish_assets', true)){
+                        $this->publishAssets($theme->folder);
+                    }
     			}
     		}
     	}
@@ -110,12 +119,8 @@ class ThemesController extends Controller
         $theme_name = $theme->name;
 
         // if the folder exists delete it
-        if(file_exists(resource_path('views/themes/'.$theme->folder))){
-            File::deleteDirectory(resource_path('views/themes/'.$theme->folder), false);
-        }
-
-        if(file_exists(public_path('themes/'.$theme->folder))){
-            File::deleteDirectory(public_path('themes/'.$theme->folder), false);
+        if(file_exists($this->themes_folder.'/'.$theme->folder)){
+            File::deleteDirectory($this->themes_folder.'/'.$theme->folder, false);
         }
 
         $theme->delete();
@@ -208,10 +213,13 @@ class ThemesController extends Controller
         $theme_path = public_path('themes/'.$theme);
 
         if(!file_exists($theme_path)){
+            if(!file_exists(public_path('themes'))){
+                mkdir(public_path('themes'));
+            }
             mkdir($theme_path);
         }
 
-        File::copyDirectory(resource_path('views/themes/'.$theme.'/assets'), public_path('themes/'.$theme));
-        File::copy(resource_path('views/themes/'.$theme.'/'.$theme.'.jpg'), public_path('themes/'.$theme.'/'.$theme.'.jpg'));
+        File::copyDirectory($this->themes_folder.'/'.$theme.'/assets', public_path('themes/'.$theme));
+        File::copy($this->themes_folder.'/'.$theme.'/'.$theme.'.jpg', public_path('themes/'.$theme.'/'.$theme.'.jpg'));
     }
 }
