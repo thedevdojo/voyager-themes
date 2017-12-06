@@ -55,7 +55,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
         $this->loadModels();
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'themes');
 
-        $theme = rescue(function () {
+        $theme = $this->rescue(function () {
             return \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
         });
 
@@ -171,6 +171,19 @@ class VoyagerThemesServiceProvider extends ServiceProvider
                 $table->text('value')->nullable();
                 $table->timestamps();
             });
+        }
+    }
+
+    // Duplicating the rescue function that's available in 5.5, just in case
+    // A user wants to use this hook with 5.4
+    
+    function rescue(callable $callback, $rescue = null)
+    {
+        try {
+            return $callback();
+        } catch (Throwable $e) {
+            report($e);
+            return value($rescue);
         }
     }
 }
