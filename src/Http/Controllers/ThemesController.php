@@ -21,14 +21,14 @@ class ThemesController extends Controller
 
         // Anytime the admin visits the theme page we will check if we
         // need to add any more themes to the database
-    	$this->installThemes();
+        $this->installThemes();
         $themes = Theme::all();
 
         return view('themes::index', compact('themes'));
     }
 
     private function getThemesFromFolder(){
-    	$themes = array();
+        $themes = array();
 
         if(!file_exists($this->themes_folder)){
             mkdir($this->themes_folder);
@@ -39,8 +39,8 @@ class ThemesController extends Controller
         if(isset($scandirectory)){
 
             foreach($scandirectory as $folder){
-            	//dd($theme_folder . '/' . $folder . '/' . $folder . '.json');
-            	$json_file = $this->themes_folder . '/' . $folder . '/' . $folder . '.json';
+                //dd($theme_folder . '/' . $folder . '/' . $folder . '.json');
+                $json_file = $this->themes_folder . '/' . $folder . '/' . $folder . '.json';
                 if(file_exists($json_file)){
                     $themes[$folder] = json_decode(file_get_contents($json_file), true);
                     $themes[$folder]['folder'] = $folder;
@@ -57,27 +57,27 @@ class ThemesController extends Controller
 
         $themes = $this->getThemesFromFolder();
 
-    	foreach($themes as $theme){
-    		if(isset($theme->folder)){
-    			$theme_exists = Theme::where('folder', '=', $theme->folder)->first();
-    			// If the theme does not exist in the database, then update it.
-    			if(!isset($theme_exists->id)){
+        foreach($themes as $theme){
+            if(isset($theme->folder)){
+                $theme_exists = Theme::where('folder', '=', $theme->folder)->first();
+                // If the theme does not exist in the database, then update it.
+                if(!isset($theme_exists->id)){
                     $version = isset($theme->version) ? $theme->version : '';
                     Theme::create(['name' => $theme->name, 'folder' => $theme->folder, 'version' => $version]);
                     if(config('themes.publish_assets', true)){
                         $this->publishAssets($theme->folder);
                     }
-    			} else {
-    				// If it does exist, let's make sure it's been updated
-    				$theme_exists->name = $theme->name;
+                } else {
+                    // If it does exist, let's make sure it's been updated
+                    $theme_exists->name = $theme->name;
                     $theme_exists->version = isset($theme->version) ? $theme->version : '';
                     $theme_exists->save();
                     if(config('themes.publish_assets', true)){
                         $this->publishAssets($theme->folder);
                     }
-    			}
-    		}
-    	}
+                }
+            }
+        }
     }
 
     public function activate($theme_folder){
@@ -167,10 +167,24 @@ class ThemesController extends Controller
         }
 
         foreach($request->all() as $key => $content){
+
+            // If we have a type checkbox and it is unchecked we need to set a value to null
+            if($content == 'checkbox'){
+                $field = str_replace('_type__theme_field', '', $key);
+                if(!isset($request->{$field})){
+                    $request->request->add([$field => null]);
+                    $key = $field;
+                }
+            }
+
+
             if(!$this->stringEndsWith($key, '_details__theme_field') && !$this->stringEndsWith($key, '_type__theme_field') && $key != '_token'){
+                
                 $type = $request->{$key.'_type__theme_field'};
                 $details = $request->{$key.'_details__theme_field'};
                 $row = (object)['field' => $key, 'type' => $type, 'details' => $details];
+
+
 
                 $value = $this->getContentBasedOnType($request, 'themes', $row);
 
@@ -186,6 +200,7 @@ class ThemesController extends Controller
                 }
             }
         }
+
 
         return redirect()
                 ->back()

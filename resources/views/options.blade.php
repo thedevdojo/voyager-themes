@@ -9,7 +9,7 @@
 			color:rgba(0, 0, 0, 0.55);
 		}
 
-		#theme_options label{
+		#theme_options label, :not(#theme_options .toggle-group label){
 			font-weight: normal;
 		    font-size: 16px;
 		    width: 100%;
@@ -54,7 +54,7 @@
         <div class="panel">
         	<div class="panel-body">
 
-	        		@if(file_exists(resource_path('views/themes') . '/' . $theme->folder . '/options.blade.php'))
+	        		@if(file_exists(config('themes.themes_folder', resource_path('views/themes')) . '/' . $theme->folder . '/options.blade.php'))
 	        			<?php define("ACTIVE_THEME_FOLDER", $theme->folder); ?>
 	        			<form action="{{ route('voyager.theme.options', $theme->folder) }}" method="POST" enctype="multipart/form-data">
 
@@ -73,13 +73,12 @@
 
 </div>
 
-
 @endsection
 
 @section('javascript')
 	<script>
-		$('document').ready(function(){
-
+		$(function () {
+			$('.toggleswitch').bootstrapToggle();
 		});
 	</script>
 @endsection
