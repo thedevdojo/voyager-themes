@@ -63,6 +63,8 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 
         $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
 
+        $this->loadDynamicMiddleware($this->themes_folder, $theme);
+
         // Make sure we have an active theme
         if (isset($theme)) {
             $this->loadViewsFrom($this->themes_folder.'/'.$theme->folder, 'theme');
@@ -144,6 +146,23 @@ class VoyagerThemesServiceProvider extends ServiceProvider
             $role = Role::where('name', 'admin')->first();
             if (!is_null($role)) {
                 $role->permissions()->attach($permission);
+            }
+        }
+    }
+
+    private function loadDynamicMiddleware($themes_folder, $theme){
+        $middleware_folder = $themes_folder . '/' . $theme->folder . '/middleware';
+        if(file_exists( $middleware_folder )){
+            $middleware_files = scandir($middleware_folder);
+            foreach($middleware_files as $middleware){
+                if($middleware != '.' && $middleware != '..'){
+                    include($middleware_folder . '/' . $middleware);
+                    $middleware_classname = 'VoyagerThemes\\Middleware\\' . str_replace('.php', '', $middleware);
+                    if(class_exists($middleware_classname)){
+                        // Dynamically Load The Middleware
+                        $this->app->make('Illuminate\Contracts\Http\Kernel')->prependMiddleware($middleware_classname);
+                    }
+                }
             }
         }
     }
