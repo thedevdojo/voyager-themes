@@ -151,6 +151,9 @@ class VoyagerThemesServiceProvider extends ServiceProvider
     }
 
     private function loadDynamicMiddleware($themes_folder, $theme){
+        if (empty($theme)) {
+            return;
+        }
         $middleware_folder = $themes_folder . '/' . $theme->folder . '/middleware';
         if(file_exists( $middleware_folder )){
             $middleware_files = scandir($middleware_folder);
@@ -176,7 +179,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
             Schema::create('voyager_themes', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('name');
-                $table->string('folder')->unique();
+                $table->string('folder', 191)->unique();
                 $table->boolean('active')->default(false);
                 $table->string('version')->default('');
                 $table->timestamps();
