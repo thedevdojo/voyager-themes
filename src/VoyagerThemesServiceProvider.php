@@ -55,19 +55,25 @@ class VoyagerThemesServiceProvider extends ServiceProvider
         $this->loadModels();
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'themes');
 
-        $theme = $this->rescue(function () {
-            return \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
-        });
+        $theme = '';
+
+        if (Schema::hasTable('voyager_themes')) {
+            $theme = $this->rescue(function () {
+                return \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+            });
+        }
 
         view()->share('theme', $theme);
 
         $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
 
-        $this->loadDynamicMiddleware($this->themes_folder, $theme);
+        if (Schema::hasTable('voyager_themes')) {
+            $this->loadDynamicMiddleware($this->themes_folder, $theme);
+        }
 
         // Make sure we have an active theme
         if (isset($theme)) {
-            $this->loadViewsFrom($this->themes_folder.'/'.$theme->folder, 'theme');
+            $this->loadViewsFrom($this->themes_folder.'/'.@$theme->folder, 'theme');
         }
         $this->loadViewsFrom($this->themes_folder, 'themes_folder');
     }
