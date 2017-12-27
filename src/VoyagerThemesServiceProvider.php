@@ -67,10 +67,8 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 
         $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
 
-        if (Schema::hasTable('voyager_themes')) {
-            $this->loadDynamicMiddleware($this->themes_folder, $theme);
-        }
-
+        $this->loadDynamicMiddleware($this->themes_folder, $theme);
+        
         // Make sure we have an active theme
         if (isset($theme)) {
             $this->loadViewsFrom($this->themes_folder.'/'.@$theme->folder, 'theme');
@@ -157,6 +155,9 @@ class VoyagerThemesServiceProvider extends ServiceProvider
     }
 
     private function loadDynamicMiddleware($themes_folder, $theme){
+        if (empty($theme)) {
+            return;
+        }
         $middleware_folder = $themes_folder . '/' . $theme->folder . '/middleware';
         if(file_exists( $middleware_folder )){
             $middleware_files = scandir($middleware_folder);
@@ -182,7 +183,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
             Schema::create('voyager_themes', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('name');
-                $table->string('folder')->unique();
+                $table->string('folder', 191)->unique();
                 $table->boolean('active')->default(false);
                 $table->string('version')->default('');
                 $table->timestamps();
