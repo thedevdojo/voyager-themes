@@ -28,6 +28,13 @@ if (!function_exists(theme)){
 	function theme($key, $default = ''){
 		$theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
 
+		if(Cookie::get('voyager_theme')){
+            $theme_cookied = \VoyagerThemes\Models\Theme::where('folder', '=', Cookie::get('voyager_theme'))->first();
+            if(isset($theme_cookied->id)){
+                $theme = $theme_cookied;
+            }
+        }
+
 		$value = $theme->options->where('key', '=', $key)->first();
 
 		if(isset($value)) {
@@ -47,6 +54,14 @@ if(!function_exists(theme_folder)){
 		}
 
 		$theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+
+		if(Cookie::get('voyager_theme')){
+            $theme_cookied = \VoyagerThemes\Models\Theme::where('folder', '=', Cookie::get('voyager_theme'))->first();
+            if(isset($theme_cookied->id)){
+                $theme = $theme_cookied;
+            }
+        }
+
 		define('VOYAGER_THEME_FOLDER', $theme->folder);
 		return 'themes/' . $theme->folder . $folder_file;
 	}
@@ -60,6 +75,14 @@ if(!function_exists(theme_folder_url)){
 		}
 
 		$theme = \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+
+		if(Cookie::get('voyager_theme')){
+            $theme_cookied = \VoyagerThemes\Models\Theme::where('folder', '=', Cookie::get('voyager_theme'))->first();
+            if(isset($theme_cookied->id)){
+                $theme = $theme_cookied;
+            }
+        }
+
 		define('VOYAGER_THEME_FOLDER', $theme->folder);
 		return url('themes/' . $theme->folder . $folder_file);
 	}
