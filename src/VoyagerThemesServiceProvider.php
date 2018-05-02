@@ -54,34 +54,40 @@ class VoyagerThemesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadModels();
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'themes');
+        try{
 
-        $theme = '';
+            $this->loadModels();
+            $this->loadViewsFrom(__DIR__.'/../resources/views', 'themes');
 
-        if (Schema::hasTable('voyager_themes')) {
-            $theme = $this->rescue(function () {
-                return \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
-            });
-            if(Cookie::get('voyager_theme')){
-                $theme_cookied = \VoyagerThemes\Models\Theme::where('folder', '=', Crypt::decrypt(Cookie::get('voyager_theme')))->first();
-                if(isset($theme_cookied->id)){
-                    $theme = $theme_cookied;
+            $theme = '';
+
+            if (Schema::hasTable('voyager_themes')) {
+                $theme = $this->rescue(function () {
+                    return \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
+                });
+                if(Cookie::get('voyager_theme')){
+                    $theme_cookied = \VoyagerThemes\Models\Theme::where('folder', '=', Crypt::decrypt(Cookie::get('voyager_theme')))->first();
+                    if(isset($theme_cookied->id)){
+                        $theme = $theme_cookied;
+                    }
                 }
             }
+
+            view()->share('theme', $theme);
+
+            $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
+
+            $this->loadDynamicMiddleware($this->themes_folder, $theme);
+            
+            // Make sure we have an active theme
+            if (isset($theme)) {
+                $this->loadViewsFrom($this->themes_folder.'/'.@$theme->folder, 'theme');
+            }
+            $this->loadViewsFrom($this->themes_folder, 'themes_folder');
+
+        } catch(\Exception $e){
+            return $e->getMessage();
         }
-
-        view()->share('theme', $theme);
-
-        $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
-
-        $this->loadDynamicMiddleware($this->themes_folder, $theme);
-        
-        // Make sure we have an active theme
-        if (isset($theme)) {
-            $this->loadViewsFrom($this->themes_folder.'/'.@$theme->folder, 'theme');
-        }
-        $this->loadViewsFrom($this->themes_folder, 'themes_folder');
     }
 
     /**
