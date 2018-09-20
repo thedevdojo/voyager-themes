@@ -56,7 +56,6 @@ class VoyagerThemesServiceProvider extends ServiceProvider
     {
         try{
 
-            $this->loadModels();
             $this->loadViewsFrom(__DIR__.'/../resources/views', 'themes');
 
             $theme = '';
@@ -78,7 +77,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
             $this->themes_folder = config('themes.themes_folder', resource_path('views/themes'));
 
             $this->loadDynamicMiddleware($this->themes_folder, $theme);
-            
+
             // Make sure we have an active theme
             if (isset($theme)) {
                 $this->loadViewsFrom($this->themes_folder.'/'.@$theme->folder, 'theme');
@@ -133,18 +132,6 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 
                 return redirect()->back();
             }
-        }
-    }
-
-    /**
-     * Loads all models in the src/Models folder.
-     *
-     * @return none
-     */
-    private function loadModels()
-    {
-        foreach ($this->models as $model) {
-            @include __DIR__.'/Models/'.$model.'.php';
         }
     }
 
@@ -216,7 +203,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
 
     // Duplicating the rescue function that's available in 5.5, just in case
     // A user wants to use this hook with 5.4
-    
+
     function rescue(callable $callback, $rescue = null)
     {
         try {
