@@ -65,7 +65,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
                     return \VoyagerThemes\Models\Theme::where('active', '=', 1)->first();
                 });
                 if(Cookie::get('voyager_theme')){
-                    $theme_cookied = \VoyagerThemes\Models\Theme::where('folder', '=', Crypt::decrypt(Cookie::get('voyager_theme')))->first();
+                    $theme_cookied = \VoyagerThemes\Models\Theme::where('folder', '=', Cookie::get('voyager_theme'))->first();
                     if(isset($theme_cookied->id)){
                         $theme = $theme_cookied;
                     }
