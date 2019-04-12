@@ -5,7 +5,7 @@ if (!function_exists(theme_field)){
 
 	function theme_field($type, $key, $title, $content = '', $details = '', $placeholder = '', $required = 0){
 
-		$theme = \VoyagerThemes\Models\Theme::where('folder', '=', ACTIVE_THEME_FOLDER)->first();
+		$theme = \VoyagerThemes\Models\Theme::where('active', 1)->first();
 
 		$option_exists = $theme->options->where('key', '=', $key)->first();
 
