@@ -1,7 +1,8 @@
 
 {
-  "name": "voyager-themes",
-  "description": "This hook will add support for Voyager front-end themes",
+  "name": "padrio/voyager-themes",
+  "description": "This is a fixed fork from a hook which has been developed by devdojo.",
+  "license": "proprietary",
   "require": {
     "larapack/hooks": "~1.0"
   },
