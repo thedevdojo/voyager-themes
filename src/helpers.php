@@ -9,12 +9,16 @@ if (!function_exists(theme_field)){
 
 		$option_exists = $theme->options->where('key', '=', $key)->first();
 
-		if(isset($option_exists->value)){
+		if ($option_exists) {
+		    $id = $option_exists->id;
 			$content = $option_exists->value;
-		}
+		} else {
+		    $id = "";
+		    $content = "";
+        }
 
 		$row = (object)['required' => $required, 'field' => $key, 'type' => $type, 'details' => $details, 'display_name' => $placeholder];
-		$dataTypeContent = (object)[$key => $content];
+		$dataTypeContent = (object)['id' => $id, $key => $content];
 		$label = '<label for="'. $key . '">' . $title . '<span class="how_to">You can reference this value with <code>theme(\'' . $key . '\')</code></span></label>';
 		$details = '<input type="hidden" value="' . $details . '" name="' . $key . '_details__theme_field">';
 		$type = '<input type="hidden" value="' . $type . '" name="' . $key . '_type__theme_field">';
