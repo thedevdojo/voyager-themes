@@ -2,14 +2,12 @@
 
 namespace VoyagerThemes;
 
-use Illuminate\Http\Request;
 use TCG\Voyager\Models\Menu;
 use TCG\Voyager\Models\Role;
 use TCG\Voyager\Models\MenuItem;
 use Illuminate\Events\Dispatcher;
 use TCG\Voyager\Models\Permission;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
