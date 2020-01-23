@@ -1,3 +1,5 @@
+[![GitHub Package Registry version](https://img.shields.io/badge/version-0.16-orange)](https://github.com/diegobas/voyager-themes/releases)
+
 <p align="center"><a href="https://laravelvoyager.com/" target="_blank"><img width="400" src="/cover.png?raw=true"></a></p>
 
 # Voyager Themes
