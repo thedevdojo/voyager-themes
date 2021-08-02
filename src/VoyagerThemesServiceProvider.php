@@ -101,9 +101,7 @@ class VoyagerThemesServiceProvider extends ServiceProvider
         $router->get('themes/activate/{theme}', ['uses' => $namespacePrefix.'ThemesController@activate', 'as' => 'theme.activate']);
         $router->get('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options', 'as' => 'theme.options']);
         $router->post('themes/options/{theme}', ['uses' => $namespacePrefix.'ThemesController@options_save', 'as' => 'theme.options.post']);
-        $router->get('themes/options', function () {
-            return redirect(route('voyager.theme.index'));
-        });
+        $router->get('themes/options', $namespacePrefix.'ThemesController@index');
         $router->delete('themes/delete', ['uses' => $namespacePrefix.'ThemesController@delete', 'as' => 'theme.delete']);
     }
 
