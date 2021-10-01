@@ -106,7 +106,7 @@ The `theme_field()` function can be used to display fields in our theme options 
     {!! theme_field(
             'text', 
             'headline', 
-            'My Aweseome Headline', 
+            'My Awesome Headline', 
             '{}', 
             'Add your Headline here', 
             0) 
